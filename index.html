@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HexCode Guesser</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrapper">
+    <h1>HexCode Guesser</h1>
+    <div class="guess-wrapper">
+      <div id="color-display"></div>
+      <div id="guess-display"></div>
+    </div>
+    <input type="text" id="guess-input" maxlength="7" placeholder="#??????" value="#" autocomplete="off"/>
+    <div id="feedback"></div>
+    <button onclick="makeGuess()">Guess</button>
+    <button onclick="startNewGame()">New Game</button>
+    <div id="message"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
