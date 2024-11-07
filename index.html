@@ -5,8 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HexCode Guesser</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/all.css">
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/sharp-solid.css">
 </head>
 <body>
+  <div class="popup">
+    <div class="popup-content">
+      <button onclick="hidePopup()"><i class="fa-solid fa-xmark"></i></button>
+      <h2 class="score"></h2>
+      <p>The hidden color was <span class="color"></span></p>
+      <p>You made <span class="attempts"></span> attempts</p>
+      <div class="attempt-field"></div>
+      <button onclick="startNewGame(); hidePopup()">New Game</button>
+    </div>
+  </div>
   <div class="wrapper">
     <h1>HexCode Guesser</h1>
     <div class="guess-wrapper">
@@ -15,9 +27,16 @@
     </div>
     <input type="text" id="guess-input" maxlength="7" placeholder="#??????" value="#" autocomplete="off"/>
     <div id="feedback"></div>
-    <button onclick="makeGuess()">Guess</button>
-    <button onclick="startNewGame()">New Game</button>
+    <div class="button-wrapper">
+      <button onclick="makeGuess()">Guess</button>
+      <button onclick="startNewGame()">New Game</button>
+    </div>
     <div id="message"></div>
+  </div>
+  <div class="guide">
+    <p class="red">Means 3+ away<i class="fa-sharp fa-solid fa-square"></i></p>
+    <p class="orange">Means 1 or 2 away<i class="fa-sharp fa-solid fa-square"></i></p>
+    <p class="green">Means correct<i class="fa-sharp fa-solid fa-square"></i></p>
   </div>
 
   <script src="script.js"></script>

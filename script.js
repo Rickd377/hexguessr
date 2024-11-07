@@ -1,5 +1,4 @@
-let targetHex;
-let attempts;
+let targetHex, attempts;
 const maxAttempts = 5;
 
 function startNewGame() {
@@ -19,6 +18,7 @@ function generateHexCode() {
 function makeGuess() {
   if (attempts >= maxAttempts) {
     document.getElementById("message").textContent = "Game over! You've used all your guesses. Start a new game.";
+    showPopup(false);
     return;
   }
 
@@ -33,34 +33,20 @@ function makeGuess() {
   feedback.classList.add("guess");
 
   for (let i = 1; i <= 6; i++) {
-    const guessChar = input[i];
-    const targetChar = targetHex[i];
-    const span = document.createElement("span");
+    const guessChar = input[i], targetChar = targetHex[i], span = document.createElement("span");
+    const guessValue = parseInt(guessChar, 16), targetValue = parseInt(targetChar, 16), difference = Math.abs(guessValue - targetValue);
 
-    const guessValue = parseInt(guessChar, 16);
-    const targetValue = parseInt(targetChar, 16);
-    const difference = Math.abs(guessValue - targetValue);
-
-    // Correct character
     if (guessChar === targetChar) {
       span.textContent = guessChar;
       span.classList.add("correct");
-      span.innerHTML += " &#10003;";  // Check mark for correct character
-    } 
-    // Nearby character (within 2 steps)
-    else if (difference <= 2) {
+      span.innerHTML += " &#10003;";
+    } else if (difference <= 2) {
       span.textContent = guessChar;
       span.classList.add("nearby");
-
-      // Display arrow based on if it's too high or low
       span.innerHTML += guessValue < targetValue ? " &#9650;" : " &#9660;";
-    } 
-    // Too far away
-    else {
+    } else {
       span.textContent = guessChar;
       span.classList.add("too-far");
-
-      // Display arrow based on if it's too high or low
       span.innerHTML += guessValue < targetValue ? " &#9650;" : " &#9660;";
     }
 
@@ -69,16 +55,14 @@ function makeGuess() {
 
   const feedbackContainer = document.getElementById("feedback");
   feedbackContainer.insertBefore(feedback, feedbackContainer.firstChild);
-
-  // Update the guess display color
   document.getElementById("guess-display").style.backgroundColor = input;
 
-  // Check if the guess was correct
   if (input === targetHex) {
-    document.getElementById("message").textContent = `Correct! You guessed it in ${attempts} attempts. The code was ${targetHex}`;
-    attempts = maxAttempts; // End game if correct
+    document.getElementById("message").textContent = `Correct! The code was ${targetHex}`;
+    showPopup(true);
   } else if (attempts >= maxAttempts) {
     document.getElementById("message").textContent = `Game over! The correct code was ${targetHex}. Start a new game.`;
+    showPopup(false);
   } else {
     document.getElementById("message").textContent = `Attempt ${attempts} of ${maxAttempts}: Keep trying!`;
   }
@@ -91,5 +75,32 @@ document.getElementById("guess-input").addEventListener("keypress", function(eve
   }
 });
 
-// Initialize the game on page load
+function showPopup(won) {
+  const popup = document.querySelector('.popup'), attemptField = document.querySelector('.attempt-field');
+  attemptField.innerHTML = '';
+
+  const feedbackItems = document.querySelectorAll('#feedback .guess');
+  feedbackItems.forEach(feedback => {
+    const attemptRow = document.createElement('div');
+    attemptRow.classList.add('attempt-row');
+    feedback.querySelectorAll('span').forEach(item => {
+      const icon = document.createElement('span');
+      icon.className = item.className;
+      icon.innerHTML = item.innerHTML.replace(/[0-9A-F]/g, '');
+      attemptRow.appendChild(icon);
+    });
+    attemptField.appendChild(attemptRow);
+  });
+
+  const actualAttempts = feedbackItems.length;
+  document.querySelector('.color').textContent = targetHex;
+  document.querySelector('.attempts').textContent = actualAttempts;
+  document.querySelector('.score').textContent = won ? "Good job" : "Game over";
+  popup.classList.add('active');
+}
+
+function hidePopup() {
+  document.querySelector('.popup').classList.remove('active');
+}
+
 startNewGame();
